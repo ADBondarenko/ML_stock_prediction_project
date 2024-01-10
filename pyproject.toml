@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "ml-stock-prediction-project"
+version = "0.1.0"
+description = "HSE '23 ML and High-Load systems yearly Masters Project"
+authors = ["Artem Bondarenko <Regall.B@yandex.ru>"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "3.9.18"
+pandas = "^2.1.4"
+jupyter = "^1.0.0"
+numpy = "^1.26.3"
+fastapi = "^0.108.0"
+psycopg2 = "^2.9.9"
+boto3 = "^1.34.15"
+uvicorn = "^0.25.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
