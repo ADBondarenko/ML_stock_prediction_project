@@ -2,8 +2,9 @@
 __pycache__/
 *.py[cod]
 *$py.class
-# Some old junk
+# Experiments and testing of components, EDA
 /notebook_experimentation
+/app_testing
 # C extensions
 *.so
 
