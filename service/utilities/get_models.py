@@ -2,6 +2,9 @@ import boto3
 from botocore.exceptions import NoCredentialsError, ClientError
 
 
+
+def get_models_by_ticker(ticker : str): 
+    
 session = boto3.session.Session()
 s3 = session.client(
     service_name='s3',

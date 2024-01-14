@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 import logging
 import re 
+from sklearn.model_selection import train_test_split
 
 def gen_re_rsi(data: pd.DataFrame, level : int = 50, period : int = 14):
     '''
@@ -286,7 +287,8 @@ def generate_features(data : pd.DataFrame, binary_rsi : bool = True, binary_ema 
         
     return data        
         
-def cleanup_data(data : pd.DataFrame):
+def cleanup_and_prepare_data(data : pd.DataFrame):
+    _log = logging.getLogger(__name__)
     #Dropping duplicates for SPOT markets
     data = data.drop(columns = ["volumeCurrency","volCcyQuote"])
     
@@ -297,10 +299,22 @@ def cleanup_data(data : pd.DataFrame):
     #Setting time_index
     data = data.set_index("unix_time")
 
-    #Cropping_data 
+    
+    #Creating a target - next closing price
+    data["target"] = data.close.shift(-1)
+    
+    #Cropping_data  
+    shape_now = data.shape
+    _log.info(f"Start dropping rows containing nans...\
+                The shape is {shape_now}")
     data = data.dropna()
-
-    return data
+    shape_then = data.shape
+    _log.info(f"Dropped rows containing nans.\
+                The shape is {shape_then}")
+    X, X_col = data.drop(columns = "target"), data.drop(columns = "target").columns
+    y = data.target
+    X_train, y_train, X_val, y_val = train_test_split(test_size = 0.2, shuffle = False)
+    return [X_train, y_train, X_val, y_val], X_col
     
     
     
