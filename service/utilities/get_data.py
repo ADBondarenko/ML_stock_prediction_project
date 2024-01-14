@@ -17,7 +17,7 @@ def get_keys() -> dict:
                                  API_S3_ID : str,
                                  API_S3_SECRET : str}
     '''
-    _log = logging.Logger()
+    _log = logging.getLogger(__name__)
     _log.info("Getting keys...")
     #Get vars
     API_OKX_PUBLIC = os.getenv("API_OKX_PUBLIC")
@@ -48,7 +48,7 @@ def get_tickers() -> list:
 
     returns: tickers : list
     '''
-    _log = logging.Logger()
+    _log = logging.getLogger(__name__)
     _log.info("Getting currently quoted SPOT tickers...")
     base_url = 'https://www.okx.com'
     url = 'https://www.okx.com'
@@ -58,8 +58,6 @@ def get_tickers() -> list:
     _log.info("Tickers retrieved.")
     return list(tickers)
 
-def get_current_timestamp():
-    _log = logging.Logger()
     
 def get_history_by_ticker(ticker : str, timeframe : str, num_bars_back : int = 300):
     '''
@@ -80,7 +78,7 @@ def get_history_by_ticker(ticker : str, timeframe : str, num_bars_back : int = 3
     
     #Historical data: https://www.okx.com/api/v5/market/history-candles?instId=BTC-USD-190927
     #Take a date long in the past e.g. 190927 : YYMMDD
-    _log = logging.Logger()
+    _log = logging.getLogger(__name__)
     _log.info("Starting to GET data...")
     #Check for ticker validity
     _log.info("Validating ticker...")
@@ -154,7 +152,7 @@ def get_history_by_ticker(ticker : str, timeframe : str, num_bars_back : int = 3
 
 
 if "name" == "__main__":
-    _log = logging.Logger()
+    _log = logging.getLogger(__name__)
     _log.info("Starting to test functionality...")
     _log.info("Testing key retrieval...")
     key_dict = get_keys()
