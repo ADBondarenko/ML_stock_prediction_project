@@ -118,7 +118,7 @@ def get_history_by_ticker(ticker : str, timeframe : str, num_bars_back : int = 3
         _log.info(f"Status code {response.status_code} returned")
         response_data = response.json()["data"]
 
-        if (num_bars_back // 300) * 300 < num_bars_back
+        if (num_bars_back // 300) * 300 < num_bars_back:
             num_batches = num_bars_back // 300 + 1
         else:
             num_batches = num_bars_back // 300
