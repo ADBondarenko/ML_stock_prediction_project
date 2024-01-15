@@ -126,7 +126,7 @@ def gen_ema(data : pd.DataFrame, period : int = 8):
             
     returns: ema_values_dict : dict
     '''
-    assert len(values) < window:
+    assert len(values) < window
     _log.info(f"Generating EMA({period}) feature...")
     
     alpha = 2 / (window + 1)
@@ -221,7 +221,7 @@ def gen_nth_diff(data : pd.DataFrame, n : int = 1):
     returns: diff_dict : dict, a dictionary of differences
     '''
     _log = logging.getLogger(__name__)
-    assert n >= 1:
+    assert n >= 1
     diff_dict = {}
     for nth in range(1, n+1)
         diff_dict[f"close_{nth}_diff"] = data.close.diff(nth)

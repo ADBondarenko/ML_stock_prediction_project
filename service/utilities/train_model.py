@@ -4,6 +4,8 @@ import pickle
 import logging
 from datetime import datetime
 from utilities.get_data import (get_keys)
+
+
 def train_model(X_train, y_train, ticker : str, timeframe : str, model : str = "rf"):
     '''
     Takes a preprocessed dataset with numerous features, trains model, 

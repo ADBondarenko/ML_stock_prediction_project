@@ -65,7 +65,7 @@ async def get_model_by_name(model_name : str):
 @ml_app.get('/model/get_new_model', 
             operation_id = "get__model__new_model",
             summary = "Trains a new model then returns its metrics on server-side along with a handle")
-async def get_new_model(ticker : str, timeframe : Timeframe, num_bars_back : int, binary_rsi : bool : True,
+async def get_new_model(ticker : str, timeframe : Timeframe, num_bars_back : int, binary_rsi : bool = True,
                             rsi_period : int =14 , rsi_levels : list = [20,40,60,80], binary_ema : bool = True,
                             ema_periods : list = [8,24], nth_diff : int = 1,
                             model_type : ModelType):

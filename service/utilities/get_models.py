@@ -80,7 +80,8 @@ def get_models_by_ticker(ticker : str):
         key_tokens = key.split("_")
         if (ticker == key_tokens[0]):
             key_list.append(key)     
-    else pass
+        else:
+            pass
 
     _log.info(f"Info downloaded from S3.")
     
