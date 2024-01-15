@@ -7,11 +7,11 @@ import psycopg2
 import boto3
 from botocore.exceptions import NoCredentialsError, ClientError
 
-from service.utilities.get_data import (get_keys, get_tickers, get_history_by_ticker)
-from service.utilities.get_models import (get_models_by_ticker_timeframe, get_models_by_ticker, get_model)
-from service.utilities.generate_features import (gen_re_rsi, gen_re_rsi_mtf, gen_rsi, gen_ema, generate_features, cleanup_and_prepare_data)
-from service.utilities.train_model import (train_model)
-from service.utilities.predict_validate import (get_error_metrics, predict, validate_model)
+from .utilities.get_data import (get_keys, get_tickers, get_history_by_ticker)
+from .utilities.get_models import (get_models_by_ticker_timeframe, get_models_by_ticker, get_model)
+from .utilities.generate_features import (gen_re_rsi, gen_re_rsi_mtf, gen_rsi, gen_ema, generate_features, cleanup_and_prepare_data)
+from .utilities.train_model import (train_model)
+from .utilities.predict_validate import (get_error_metrics, predict, validate_model)
 
 #Inititalize app
 ml_app = FastAPI()
