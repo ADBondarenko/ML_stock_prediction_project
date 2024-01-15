@@ -21,8 +21,8 @@ def get_error_metrics(y_val, y_hat) -> dict:
     _log = logging.getLogger(__name__)
     _log.info(f"Validating prediction quality...")
 
-    metrics_dict = {"R2_score" : r2_score(y_true = y_val, y_test = y_val),
-                    "RMSE" : mean_squared_error(y_true = y_val, y_test = y_val, squared = False)}
+    metrics_dict = {"R2_score" : r2_score(y_true = y_val, y_test = y_hat),
+                    "RMSE" : mean_squared_error(y_true = y_val, y_test = y_hat, squared = False)}
     _log.info(f"Got offline metrics.")
     return metrics_dict
 

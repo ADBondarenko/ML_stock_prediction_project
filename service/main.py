@@ -36,11 +36,6 @@ class Timeframe(str, Enum):
     m5320 = "3D"
     m10080 = "1W"
 
-class Prediction(BaseModel):
-    y_hat = 
-class PipelineResponse(BaseModel):
-
-    
 @ml_app.get('/',
          summary = "Root",
          operation_id =  "root__get", 
