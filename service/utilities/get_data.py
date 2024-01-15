@@ -102,7 +102,7 @@ def get_history_by_ticker(ticker : str, timeframe : str, num_bars_back : int = 3
         #300 is single-call limit set by provider (OKX)
         _log.info(f"Making a request to {method}")
         
-        response = request.get(f"{base_url}/{method}", params = payload)
+        response = requests.get(f"{base_url}/{method}", params = payload)
         _log.info(f"Status code {response.status_code} returned")
         response_data = response.json()["data"]
         
@@ -114,7 +114,7 @@ def get_history_by_ticker(ticker : str, timeframe : str, num_bars_back : int = 3
         #To be fixed later. 
         _log.info(f"Making a request to {method}")
         
-        response = request.get(f"{base_url}/{method}", params = payload)
+        response = requests.get(f"{base_url}/{method}", params = payload)
         
         _log.info(f"Status code {response.status_code} returned")
         response_data = response.json()["data"]

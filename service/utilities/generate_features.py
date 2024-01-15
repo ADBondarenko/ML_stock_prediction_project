@@ -223,7 +223,7 @@ def gen_nth_diff(data : pd.DataFrame, n : int = 1):
     _log = logging.getLogger(__name__)
     assert n >= 1
     diff_dict = {}
-    for nth in range(1, n+1)
+    for nth in range(1, n+1):
         diff_dict[f"close_{nth}_diff"] = data.close.diff(nth)
         diff_dict[f"open_{nth}_diff"] = data.open.diff(nth)
         diff_dict[f"high_{nth}_diff"] = data.high.diff(nth)

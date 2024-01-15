@@ -6,6 +6,7 @@ import os
 import psycopg2
 import boto3
 from botocore.exceptions import NoCredentialsError, ClientError
+import pickle 
 
 from .utilities.get_data import (get_keys, get_tickers, get_history_by_ticker)
 from .utilities.get_models import (get_models_by_ticker_timeframe, get_models_by_ticker, get_model)
@@ -99,7 +100,7 @@ async def predict(model_name : str, ticker : str, timeframe : Timeframe, num_bar
     model = pickle.loads(model)
 
     #Get data for prediction
-    data_raw = get_history_by_ticker(ticker, timeframe, num_bars_back)
+    data_raw = get_history_by_ticker(ticker, timeframe, num_bars)
     data = generate_features(data_raw)
     
     training_data, columns = cleanup_and_prepare_data(data)
