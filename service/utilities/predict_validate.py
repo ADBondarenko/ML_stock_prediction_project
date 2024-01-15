@@ -1,4 +1,4 @@
-from sklearn.linear_models import LinearRegression
+from sklearn.linear_model import LinearRegression
 from sklearn.metrics import (r2_score, mean_squared_error)
 import pickle
 import logging
