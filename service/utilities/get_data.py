@@ -3,6 +3,7 @@ import json
 import os
 import logging
 from datetime import datetime
+import pandas as pd 
 #API_KEY with read permissions 
 #Written as ENV_VAR in Render
 
@@ -125,7 +126,7 @@ def get_history_by_ticker(ticker : str, timeframe : str, num_bars_back : int = 3
         
         ohlc = pd.DataFrame(response_data, columns = response_cols)
         
-        cur_num_back += num_bars_back - 300
+        cur_num_back = num_bars_back - 300
         last_cur_timestamp = ohlc.unix_time[-1]
         counter = 1
         _log.info(f"Batch {counter} out of {num_batches} downloaded!")
@@ -133,12 +134,12 @@ def get_history_by_ticker(ticker : str, timeframe : str, num_bars_back : int = 3
         while cur_num_back >= 0:
             payload["after"] = last_cur_timestamp
             _log.info(f"Making a request to {method}")
-            response = request.get(f"{base_url}/{method}", params = payload)
+            response = requests.get(f"{base_url}/{method}", params = payload)
             _log.info(f"Status code {response.status_code} returned")
             
             response_data = response.json()["data"]
             
-            add_ohlc = pd.DataFrame(response_data, columns = response_cols)
+            new_ohlc = pd.DataFrame(response_data, columns = response_cols)
 
             ohlc = pd.concat([ohlc, new_ohlc])
 
