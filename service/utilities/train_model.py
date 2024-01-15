@@ -1,4 +1,4 @@
-from sklearn.linear_models import LinearRegression
+from sklearn.linear_model import LinearRegression
 from sklearn.ensemble import (RandomForestRegressor, HistGradientBoostingRegressor)
 import pickle
 import logging
