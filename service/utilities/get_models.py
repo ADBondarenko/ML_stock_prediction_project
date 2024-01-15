@@ -32,7 +32,8 @@ def get_models_by_ticker_timeframe(ticker : str, timeframe : str):
         key_tokens = key.split("_")
         if (ticker == key_tokens[0]) and (timeframe ==key_tokens[2]):
             key_list.append(key)     
-    else pass
+    else:
+        pass
 
     _log.info(f"Info downloaded from S3.")
     
