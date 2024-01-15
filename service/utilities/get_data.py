@@ -86,7 +86,7 @@ def get_history_by_ticker(ticker : str, timeframe : str, num_bars_back : int = 3
     if ticker in valid_tickers:
         pass
     else:
-        raise ValueError(f"{ticker} is not a valid ticker.")
+        raise ValueError(f"{ticker} is not a valid ticker.")1
         
     response_cols = ["unix_time", "open", "high", "low", "close", "volume", "volumeCurrency","volCcyQuote", "closed_flg"]
     base_url = 'https://www.okx.com'
@@ -95,7 +95,7 @@ def get_history_by_ticker(ticker : str, timeframe : str, num_bars_back : int = 3
     
     assert num_bars_back > 0
     
-    _log.info(f"Getting {num_bars_back} {timeframe} bars OHLC data for {ticker}"
+    _log.info(f"Getting {num_bars_back} {timeframe} bars OHLC data for {ticker}")
     
     if num_bars_back <= 300:
         #300 is single-call limit set by provider (OKX)
