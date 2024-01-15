@@ -106,7 +106,7 @@ def get_history_by_ticker(ticker : str, timeframe : str, num_bars_back : int = 3
         response_data = response.json()["data"]
         
         ohlc = pd.DataFrame(response_data, columns = response_cols)
-        _log.info(f"Data downloaded!)"
+        _log.info(f"Data downloaded!")
         
     else:
         #Lazy logic implemented, may return more data than it should. May ask for unexisting data in some cases.
