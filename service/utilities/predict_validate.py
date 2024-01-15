@@ -3,7 +3,7 @@ from sklearn.metrics import (r2_score, mean_squared_error)
 import pickle
 import logging
 from datetime import datetime
-from utilities.get_data import (get_keys)
+from .get_data import (get_keys)
 
 def get_error_metrics(y_val, y_hat) -> dict:
     '''

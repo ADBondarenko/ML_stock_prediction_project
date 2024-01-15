@@ -1,6 +1,6 @@
 import boto3
 from botocore.exceptions import NoCredentialsError, ClientError
-from utilities.get_data import (get_keys)
+from .get_data import (get_keys)
 import logging
 import pickle
 def get_models_by_ticker_timeframe(ticker : str, timeframe : str): 
