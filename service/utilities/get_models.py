@@ -10,7 +10,7 @@ def get_models_by_ticker_timeframe(ticker : str, timeframe : str):
     #Getting keys
     keychain = get_keys()
     API_S3_ID = keychain["API_S3_ID"]
-    API_S3_SECRET = keycahin["API_S3_SECRET"]
+    API_S3_SECRET = keychain["API_S3_SECRET"]
 
     #Opening client
     session = boto3.session.Session()
@@ -39,7 +39,7 @@ def get_models_by_ticker_timeframe(ticker : str, timeframe : str):
     
     _log.info(f"Pulling models from S3...")
     models_list = []
-    if len(model_list) > 0: 
+    if len(models_list) > 0: 
         for model_key in models_list:
             response = s3.get_object(Bucket='ml-project', Key=model_key)
             file_ = response["Body"].read()
@@ -59,7 +59,7 @@ def get_models_by_ticker(ticker : str):
     #Getting keys
     keychain = get_keys()
     API_S3_ID = keychain["API_S3_ID"]
-    API_S3_SECRET = keycahin["API_S3_SECRET"]
+    API_S3_SECRET = keychain["API_S3_SECRET"]
 
     #Opening client
     session = boto3.session.Session()
@@ -88,7 +88,7 @@ def get_models_by_ticker(ticker : str):
     
     _log.info(f"Pulling models from S3...")
     models_list = []
-    if len(model_list) > 0: 
+    if len(models_list) > 0: 
         for model_key in models_list:
             response = s3.get_object(Bucket='ml-project', Key=model_key)
             file_ = response["Body"].read()
@@ -108,7 +108,7 @@ def get_model(model_name : str):
     #Getting keys
     keychain = get_keys()
     API_S3_ID = keychain["API_S3_ID"]
-    API_S3_SECRET = keycahin["API_S3_SECRET"]
+    API_S3_SECRET = keychain["API_S3_SECRET"]
 
     #Opening client
     session = boto3.session.Session()
