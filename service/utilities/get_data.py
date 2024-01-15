@@ -86,7 +86,7 @@ def get_history_by_ticker(ticker : str, timeframe : str, num_bars_back : int = 3
     if ticker in valid_tickers:
         pass
     else:
-        raise ValueError(f"{ticker} is not a valid ticker.")1
+        raise ValueError(f"{ticker} is not a valid ticker.")
         
     response_cols = ["unix_time", "open", "high", "low", "close", "volume", "volumeCurrency","volCcyQuote", "closed_flg"]
     base_url = 'https://www.okx.com'
