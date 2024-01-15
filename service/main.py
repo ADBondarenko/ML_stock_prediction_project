@@ -7,71 +7,146 @@ import psycopg2
 import boto3
 from botocore.exceptions import NoCredentialsError, ClientError
 
+from service.utilities.get_data import (get_keys, get_tickers, get_history_by_ticker)
+from service.utilities.get_models import (get_models_by_ticker_timeframe, get_models_by_ticker, get_model)
+from service.utilities.generate_features import (gen_re_rsi, gen_re_rsi_mtf, gen_rsi, gen_ema, generate_features, cleanup_and_prepare_data)
+from service.utilities.train_model import (train_model)
+from service.utilities.predict_validate import (get_error_metrics, predict, validate_model)
 
-
-
-
-
-# database_connector = psycopg2.connect()
+#Inititalize app
 ml_app = FastAPI()
 
+#Create classes for Requests methods
+class ModelType(str, Enum):
+    random_forest = "rf"
+    linear_regression = "lr"
+    hist_gradient_boosting = "hgb"
+   
+class Timeframe(str, Enum):
+    m1 = "1m"
+    m3 = "3m"
+    m5 = "5m"
+    m15 = "15m"
+    m30 = "30m"
+    m60 = "1H"
+    m120 = "2H"
+    m240 = "4H"
+    m360 = "6H"
+    m1440 = "1D"
+    m5320 = "3D"
+    m10080 = "1W"
 
-class DogType(str, Enum):
-    terrier = "terrier"
-    bulldog = "bulldog"
-    dalmatian = "dalmatian"
+class Prediction(BaseModel):
+    y_hat = 
+class PipelineResponse(BaseModel):
 
-
-class Dog(BaseModel):
-    name: str
-    pk: int
-    kind: DogType
-
-
-class Timestamp(BaseModel):
-    id: int
-    timestamp: int
-
-
-dogs_db = {
-    0: Dog(name='Bob', pk=0, kind='terrier'),
-    1: Dog(name='Marli', pk=1, kind="bulldog"),
-    2: Dog(name='Snoopy', pk=2, kind='dalmatian'),
-    3: Dog(name='Rex', pk=3, kind='dalmatian'),
-    4: Dog(name='Pongo', pk=4, kind='dalmatian'),
-    5: Dog(name='Tillman', pk=5, kind='bulldog'),
-    6: Dog(name='Uga', pk=6, kind='bulldog')
-}
-
-post_db = [
-    Timestamp(id=0, timestamp=12),
-    Timestamp(id=1, timestamp=10)
-]
-summary="Create an item",
-description="Create an item with all the information, name, description, price, tax and a set of unique tags"
-
-@app.get('/',
+    
+@ml_app.get('/',
          summary = "Root",
          operation_id =  "root__get", 
          response_model = {})
 async def root() -> dict:
-    return {"Status" : "Service is operational."}
+    return {"Status" : "Prediction service is online."}
     
-@app.post('/post',
-         summary = "Get Post",
-         operation_id =  "get_post_post_post", 
-         response_model = Timestamp)
-async def post() -> Timestamp:
-    new_id = post_db[-1].id + 1
-    timestamp = time.time()
+
+@ml_app.get('/model/get_models_by_ticker', 
+            operation_id = "get__model__models_by_ticker",
+            summary = "Get the best availible model with predictions, its metrics or create a new one")
+async def get_models_by_ticker(ticker : str):
+    model_list = get_models_by_ticker(ticker)
+
+    return {"models" : model_list}
+
+@ml_app.get('/model/get_model_by_name', 
+            operation_id = "get__model__model_by_name",
+            summary = "Returns a Pickle-serialized sklearn trained model object")
+async def get_model_by_name(model_name : str):
+    model_pkl = get_model(model_name)
+
+    return {"model" : model_pkl}
     
-    # response = {"id" : new_id, "timestamp" : timestamp}
 
-    response = Timestamp(id = new_id, timestamp = timestamp)
-    return response
-    ...
+    
+@ml_app.get('/model/get_new_model', 
+            operation_id = "get__model__new_model",
+            summary = "Trains a new model then returns its metrics on server-side along with a handle")
+async def get_new_model(ticker : str, timeframe : Timeframe, num_bars_back : int, binary_rsi : bool : True,
+                            rsi_period : int =14 , rsi_levels : list = [20,40,60,80], binary_ema : bool = True,
+                            ema_periods : list = [8,24], nth_diff : int = 1,
+                            model_type : ModelType):
+    #Getting data
+    data_raw = get_history_by_ticker(ticker, timeframe, num_bars_back)
+    #Preprocessing
+    data = generate_features(data_raw, binary_rsi, binary_ema, nth_diff,
+                      rsi_period, rsi_levels, ema_periods)
+    training_data, columns = cleanup_and_prepare_data(data)
+    
+    X_train, y_train, X_val, y_val = training_data
+    #Training model
+    new_model, new_model_handle = train_model(X_train, y_train, ticker, timeframe, model_type)
+    y_hat_train = predict(X_train, new_model)
+    y_hat_val = predict(X_train, new_model)
+    #Getting metrics
+    metrics_train = get_error_metrics(y_train, y_hat_train)
+    metrics_val = get_error_metrics(y_val, y_hat_val)
+    return {"model_name" : new_model_handle,
+            "metrics_train" : metrics_train,
+            "metrics_val" : metrics_val}
+    
 
-...
+
+@ml_app.get('/model/predict', 
+            operation_id = "get__model__predict",
+            summary = "Pass a model name to get a prediction on server_side along with metrics")   
+async def predict(model_name : str, ticker : str, timeframe : Timeframe, num_bars : int = 40):
+
+    #Download model from S3
+    model_pkl = get_model(model_name)
+    model = pickle.loads(model)
+
+    #Get data for prediction
+    data_raw = get_history_by_ticker(ticker, timeframe, num_bars_back)
+    data = generate_features(data_raw)
+    
+    training_data, columns = cleanup_and_prepare_data(data)
+    
+    X_train, y_train, X_val, y_val = training_data
+
+    y_hat = predict(X_val, model)
+
+    metrics = get_error_metrics(y_val, y_hat)
+
+    return {"y_hat" : y_hat, "validation_matrics" : metrics}
+    
+    
+    
+    
+    
+    
+
+    
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                            
+                            
 @app.get('/dog',
         summary = "Get Dogs",
         operation_id =  "get_dogs_dog_get", 
@@ -120,51 +195,3 @@ async def post_dog(name : str, pk: int, kind : DogType) -> Dog:
         
         return response
     
-@app.get('/dog/{pk}',
-        summary = "Get Dog By Pk",
-        operation_id =  "get_dog_by_pk_dog__pk__get", 
-        response_model = Dog)
-async def get_dog_by_pk(pk : int) -> Dog:
-    
-    if pk not in dogs_db.keys():
-        
-        raise HTTPException(status_code = 404, detail = "Dog with a given 'pk' is not found")
-    
-    else:
-        dog_by_pk = dogs_db[dog_pk]
-    
-        # reponse = {
-        #     "name" : dog_by_pk.name,
-        #     "pk" : dog_by_pk.pk,
-        #     "kind" : dog_by_pk.kind                  
-        # }
-        response = dog_by_pk
-        
-        return response
-   
-    
-    
-    
-@app.patch('/dog/{pk}',
-          summary = "Update Dog",
-          operation_id =  "update_dog_dog__pk__patch", 
-          response_model = Dog)
-async def update_dog_by_pk(pk : int, name : str, kind = DogType) -> Dog:
-    
-    if pk not in dogs_db.keys():
-        
-        raise HTTPException(status_code = 404, detail = "Dog with a given 'pk' is not found")
-        
-    else: 
-        
-        dogs_db[pk].name = name
-        dogs_db[pk].kind = kind
-            
-        updated_dog = dogs_db[pk]
-        # response = {
-        #     "name" = updated_dog.name,
-        #     "pk" = updated_dog.pk,
-        #     "kind" = updated_dog.kind
-        # }
-        response = updated_dog
-        return response

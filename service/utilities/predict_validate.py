@@ -23,11 +23,10 @@ def get_error_metrics(y_val, y_hat) -> dict:
 
     metrics_dict = {"R2_score" : r2_score(y_true = y_val, y_test = y_val),
                     "RMSE" : mean_squared_error(y_true = y_val, y_test = y_val, squared = False)}
-
+    _log.info(f"Got offline metrics.")
     return metrics_dict
 
-    
-
+ 
 #Under development
 # def get_business_metrics(y_val, y_hat) ->dict:
 #     '''
