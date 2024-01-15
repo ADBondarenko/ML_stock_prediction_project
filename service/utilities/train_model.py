@@ -4,7 +4,7 @@ import pickle
 import logging
 from datetime import datetime
 from utilities.get_data import (get_keys)
-
+import boto3 
 
 def train_model(X_train, y_train, ticker : str, timeframe : str, model : str = "rf"):
     '''
@@ -37,7 +37,7 @@ def train_model(X_train, y_train, ticker : str, timeframe : str, model : str = "
     #Getting keys
     keychain = get_keys()
     API_S3_ID = keychain["API_S3_ID"]
-    API_S3_SECRET = keycahin["API_S3_SECRET"]
+    API_S3_SECRET = keychain["API_S3_SECRET"]
 
     #Opening client
     session = boto3.session.Session()

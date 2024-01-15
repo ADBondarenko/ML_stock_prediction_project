@@ -72,7 +72,7 @@ def validate_model(X_val, y_val, fitted_model) -> dict:
     y_hat = predict(X_val, fitted_model)
 
     metrics_stats = get_error_metrics(y_val, y_hat)
-
+    metrics_full = {}
     metrics_full["stats"] = {metrics_stats}
 
     # metrics["business"] = {}
