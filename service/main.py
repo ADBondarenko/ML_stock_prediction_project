@@ -90,10 +90,10 @@ async def get_new_model(ticker : str, timeframe : Timeframe, model_type : ModelT
     
 
 
-@ml_app.get('/model/predict', 
+@ml_app.get('/model/predict_by_model_ticker', 
             operation_id = "get__model__predict",
             summary = "Pass a model name to get a prediction on server_side along with metrics")   
-async def predict(model_name : str, ticker : str, timeframe : Timeframe, num_bars : int = 40):
+async def predict_by_model_ticker(model_name : str, ticker : str, timeframe : Timeframe, num_bars : int = 40):
 
     #Download model from S3
     model_pkl = get_model(model_name)
