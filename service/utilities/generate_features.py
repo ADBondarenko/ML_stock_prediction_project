@@ -313,7 +313,8 @@ def cleanup_and_prepare_data(data : pd.DataFrame):
                 The shape is {shape_then}")
     X, X_col = data.drop(columns = "target"), data.drop(columns = "target").columns
     y = data.target
-    X_train, y_train, X_val, y_val = train_test_split(test_size = 0.2, shuffle = False)
+    X_train, X_val = train_test_split(X, test_size = 0.2, shuffle = False), 
+    y_train, y_val = train_test_split(test_size = 0.2, shuffle = False)
     return [X_train, y_train, X_val, y_val], X_col
     
     
