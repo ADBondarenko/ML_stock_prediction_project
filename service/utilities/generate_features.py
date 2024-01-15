@@ -174,7 +174,7 @@ def gen_binary_features(data : pd.DataFrame, EMA : bool = True, RSI : bool = Tru
                 ema_vals = data.col_name
                 flag_array =[]
                 for closing_price, ema_val in zip(close_prices, ema_vals):
-                    if closing_price > ema_val
+                    if closing_price > ema_val:
                         flag_array.append(1)
                     
                     else:
