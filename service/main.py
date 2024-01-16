@@ -110,7 +110,7 @@ async def get_model_predict_by_model_ticker(model_name : str, ticker : str, time
     y_hat = predict(X_val, model)
 
     metrics = get_error_metrics(y_val, y_hat)
-    metrics["y_hat"] = y_hat
+    metrics["y_hat"] = list(y_hat)
     return metrics
     
     
