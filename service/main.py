@@ -48,7 +48,7 @@ async def root() -> dict:
 @ml_app.get('/model/get_models_by_ticker', 
             operation_id = "get__model__models_by_ticker",
             summary = "Get the best availible model with predictions, its metrics or create a new one")
-async def get_models_by_ticker(ticker : str):
+async def get_model_models_by_ticker(ticker : str):
     model_list = get_models_by_ticker(ticker)
 
     return {"models" : model_list}
@@ -56,7 +56,7 @@ async def get_models_by_ticker(ticker : str):
 @ml_app.get('/model/get_model_by_name', 
             operation_id = "get__model__model_by_name",
             summary = "Returns a Pickle-serialized sklearn trained model object")
-async def get_model_by_name(model_name : str):
+async def get_model_model_by_name(model_name : str):
     model_pkl = get_model(model_name)
 
     return {"model" : model_pkl}
@@ -66,7 +66,7 @@ async def get_model_by_name(model_name : str):
 @ml_app.get('/model/get_new_model', 
             operation_id = "get__model__new_model",
             summary = "Trains a new model then returns its metrics on server-side along with a handle")
-async def get_new_model(ticker : str, timeframe : Timeframe, model_type : ModelType, num_bars_back : int, binary_rsi : bool = True,
+async def get_model_new_model(ticker : str, timeframe : Timeframe, model_type : ModelType, num_bars_back : int, binary_rsi : bool = True,
                             rsi_period : int =14 , rsi_levels : list = [20,40,60,80], binary_ema : bool = True,
                             ema_periods : list = [8,24], nth_diff : int = 1):
     #Getting data
@@ -93,7 +93,7 @@ async def get_new_model(ticker : str, timeframe : Timeframe, model_type : ModelT
 @ml_app.get('/model/predict_by_model_ticker', 
             operation_id = "get__model__predict",
             summary = "Pass a model name to get a prediction on server_side along with metrics")   
-async def predict_by_model_ticker(model_name : str, ticker : str, timeframe : Timeframe, num_bars : int = 40):
+async def get_model_predict_by_model_ticker(model_name : str, ticker : str, timeframe : Timeframe, num_bars : int = 40):
 
     #Download model from S3
     model_pkl = get_model(model_name)
