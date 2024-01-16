@@ -80,7 +80,7 @@ async def get_model_new_model(ticker : str, timeframe : Timeframe, model_type : 
     #Training model
     new_model, new_model_handle = train_model(X_train, y_train, ticker, timeframe, model_type)
     y_hat_train = predict(X_train, new_model)
-    y_hat_val = predict(X_train, new_model)
+    y_hat_val = predict(X_val, new_model)
     #Getting metrics
     metrics_train = get_error_metrics(y_train, y_hat_train)
     metrics_val = get_error_metrics(y_val, y_hat_val)
