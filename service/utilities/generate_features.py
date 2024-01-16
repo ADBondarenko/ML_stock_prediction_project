@@ -126,6 +126,7 @@ def gen_ema(data : pd.DataFrame, period : int = 8):
             
     returns: ema_values_dict : dict
     '''
+    _log = logging.getLogger(__name__)
     values = data.close
     assert len(values) > period 
     _log.info(f"Generating EMA({period}) feature...")
