@@ -24,11 +24,11 @@ def get_models_by_ticker_timeframe(ticker : str, timeframe : str):
     #List all models by ticker and timeframe 
     bucket_name = "ml-project"
     
-    objects = s3.list_objects(Bucket='ml-project')["contents"]
+    objects = s3.list_objects(Bucket='ml-project')["Contents"]
     _log.info(f"Getting models info from S3...")
     key_list = []
     for object in objects:
-        key = object["key"]
+        key = object["Key"]
         key_tokens = key.split("_")
         if (ticker == key_tokens[0]) and (timeframe ==key_tokens[2]):
             key_list.append(key)     
