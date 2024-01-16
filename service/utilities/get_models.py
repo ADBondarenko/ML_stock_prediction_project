@@ -51,7 +51,7 @@ def get_models_by_ticker_timeframe(ticker : str, timeframe : str):
     
 
     return models_list
-
+    
 def get_models_by_ticker(ticker : str): 
     '''
     '''
@@ -88,18 +88,17 @@ def get_models_by_ticker(ticker : str):
     
     _log.info(f"Pulling models from S3...")
     models_list = []
-    if len(models_list) > 0: 
-        for model_key in models_list:
+    if len(key_list) > 0: 
+        for model_key in key_list:
             response = s3.get_object(Bucket='ml-project', Key=model_key)
             file_ = response["Body"].read()
-            model_ = pickle.loads(file_)
-            models_list.append(model_)
+            models_list.append(file_)
         _log.info(f"Models succesfully pulled")
     else: 
         _log.info(f"Nothing to pull!")
     
 
-    return models_list 
+    return key_list #model_list will encounted the same proble as with bytestring pickle objects
 
 def get_model(model_name : str): 
     '''

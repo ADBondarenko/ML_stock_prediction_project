@@ -59,7 +59,7 @@ async def get_model_models_by_ticker(ticker : str):
 async def get_model_model_by_name(model_name : str):
     model_pkl = get_model(model_name)
 
-    return {"model" : model_pkl}
+    return {"model" : [model_pkl]}
     
 
     
