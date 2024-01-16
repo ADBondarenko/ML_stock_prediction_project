@@ -92,7 +92,7 @@ def get_history_by_ticker(ticker : str, timeframe : str, num_bars_back : int = 3
     response_cols = ["unix_time", "open", "high", "low", "close", "volume", "volumeCurrency","volCcyQuote", "closed_flg"]
     base_url = 'https://www.okx.com'
     method = 'api/v5/market/history-candles'
-    payload = {'InstId': ticker, 'bar': timeframe, 'limit' : num_bars_back}
+    payload = {'instId': ticker, 'bar': timeframe, 'limit' : num_bars_back}
     
     assert num_bars_back > 0
     
