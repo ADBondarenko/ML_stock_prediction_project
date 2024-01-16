@@ -148,7 +148,18 @@ def get_history_by_ticker(ticker : str, timeframe : str, num_bars_back : int = 3
             
             last_cur_timestamp = ohlc.unix_time[-1]
             cur_num_back += -300 
-            
+
+    #Retype data
+    retype_dict = {"unix_time" : float, 
+     "open" : float, 
+     "high" : float,
+     "low" : float,
+     "close" : float,
+     "volume" : float,
+     "volumeCurrency" : float,
+     "volCcyQuote" : float,
+     "closed_flg" : int}
+    ohlc = ohlc.astype(retype_dict)    
     return ohlc
 
 
