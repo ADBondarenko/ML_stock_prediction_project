@@ -25,8 +25,10 @@ def train_model(X_train, y_train, ticker : str, timeframe : str, model : str = "
     _log.info(f"Started training model at {now} timestamp")
     cur_model.fit(X_train, y_train)
     then = datetime.now()
-    then = then.strftime("%Y-%m-%d-%H-%M-%S")
+    
     time_diff_seconds = (then - now).total_seconds()
+    then = then.strftime("%Y-%m-%d-%H-%M-%S")
+    
     _log.info(f"Model succesfully trained in {time_diff_seconds} s.")
     model_name = f"{ticker}_{model}_{timeframe}_{then}_train"
     
