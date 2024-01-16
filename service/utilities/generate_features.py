@@ -39,8 +39,8 @@ def gen_re_rsi(data: pd.DataFrame, level : int = 50, period : int = 14):
             ADC = K * (close_prices[i - 1] - close_prices[i]) + (1 - K) * (ADC if i > 1 else 1)
             AUC = (1 - K) * (AUC if i > 1 else 1)
 
-        nVal[i] = (period - 1) * (ADC * Value / (100 - Value) - AUC)
-        nRes[i] = close_prices[i] + nVal[i] if nVal[i] >= 0 else close_prices[i] + nVal[i] * (100 - Value) / Value
+        nVal[i] = (period - 1) * (ADC * level / (100 - level) - AUC)
+        nRes[i] = close_prices[i] + nVal[i] if nVal[i] >= 0 else close_prices[i] + nVal[i] * (100 - level) / level
     _log.info(f"Generation succesfull")
     
     re_rsi = nRes
@@ -68,8 +68,8 @@ def gen_re_rsi_mtf(data: pd.DataFrame, levels : list = [20,40,60,80], period : i
     
     re_rsi_mtf = {}
     _log.info(f"Generating RE-RSI features for {levels} levels")
-    for period in levels: 
-        re_rsi_mtf[f"re_rsi_{i}_{period}"] = gen_re_rsi(data, level, period)
+    for level in levels: 
+        re_rsi_mtf[f"re_rsi_{level}_{period}"] = gen_re_rsi(data, level, period)
     _log.info(f"Generation succesfull")
 
     return re_rsi_mtf
@@ -126,10 +126,11 @@ def gen_ema(data : pd.DataFrame, period : int = 8):
             
     returns: ema_values_dict : dict
     '''
-    assert len(values) < window
+    values = data.close
+    assert len(values) > period 
     _log.info(f"Generating EMA({period}) feature...")
     
-    alpha = 2 / (window + 1)
+    alpha = 2 / (period  + 1)
     ema_values = [values[0]]  
 
     for i in range(1, len(values)):
@@ -171,9 +172,9 @@ def gen_binary_features(data : pd.DataFrame, EMA : bool = True, RSI : bool = Tru
         for col_name in columns:
             if "ema" in col_name:
                 period = col_name.split('_')[1]
-                ema_vals = data.col_name
+                ema_vals = data[[col_name]]
                 flag_array =[]
-                for closing_price, ema_val in zip(close_prices, ema_vals):
+                for closing_price, ema_val in zip(close_prices, ema_vals.values):
                     if closing_price > ema_val:
                         flag_array.append(1)
                     
@@ -183,7 +184,10 @@ def gen_binary_features(data : pd.DataFrame, EMA : bool = True, RSI : bool = Tru
                 rsi_ema_flg_dict[f"EMA_{period}_flg"] = flag_array
     
     if RSI == True:
-        rsi = data.rsi
+        for col_name in columns:
+            if ("rsi" in col_name) and ("re" not in col_name):
+                period = col_name.split('_')[1]
+                rsi = data[col_name]
         levels = []
         for col_name in columns:
             if "rsi_re" in col_name:
@@ -253,7 +257,7 @@ def generate_features(data : pd.DataFrame, binary_rsi : bool = True, binary_ema 
     _log = logging.getLogger(__name__)
     #Generate RSI
     rsi = gen_rsi(data, rsi_period)
-    rsi_key = rsi.keys()[0]
+    rsi_key = list(rsi.keys())[0]
     data[rsi_key] = rsi[rsi_key]
     #Generate RE_RSI
     re_rsi_mtf = gen_re_rsi_mtf(data, rsi_levels, rsi_period)
@@ -261,10 +265,10 @@ def generate_features(data : pd.DataFrame, binary_rsi : bool = True, binary_ema 
     for key in re_rsi_mtf:
         data[key] = re_rsi_mtf[key]
     #Generate EMA
-    for period in ema_periods.keys():
-        ema = gen_ema(period)
-        ema_key = ema.keys()[0]
-        data[ema_key] = rsi[ema_key]
+    for period in ema_periods:
+        ema = gen_ema(data, period)
+        ema_key = list(ema.keys())[0]
+        data[ema_key] = ema[ema_key]
         
     binary = (binary_rsi or binary_ema)
     #Generate binary and ordinal  data
@@ -278,12 +282,12 @@ def generate_features(data : pd.DataFrame, binary_rsi : bool = True, binary_ema 
         data[key] = differences[key]
         
     #Add a previous OHLC
-    data_prev_cols = [["open_1_back",
+    data_prev_cols = ["open_1_back",
                        "close_1_back", 
                        "low_1_back",
-                       "high_1_back"]]
+                       "high_1_back"]
     
-    data[data_prev_cols] = data.shift(1)
+    data[data_prev_cols] = data[["open", "close", "low", "high"]].shift(1)
         
     return data        
         
