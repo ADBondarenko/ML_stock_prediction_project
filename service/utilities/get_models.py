@@ -105,6 +105,7 @@ def get_model(model_name : str):
     '''
     '''
     _log = logging.getLogger(__name__)
+    model_name = f"{model_name}.pkl"
     #Getting keys
     keychain = get_keys()
     API_S3_ID = keychain["API_S3_ID"]
