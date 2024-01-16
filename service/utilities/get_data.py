@@ -55,7 +55,7 @@ def get_tickers() -> list:
     url = 'https://www.okx.com'
     tickers = pd.DataFrame((requests.get(url+'/api/v5/market/tickers?instType=SPOT').json())['data'])
     tickers = tickers.drop('instType', axis=1)
-    tickers = tickers.InstId
+    tickers = tickers.instId
     _log.info("Tickers retrieved.")
     return list(tickers)
 
