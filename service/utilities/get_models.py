@@ -77,7 +77,7 @@ def get_models_by_ticker(ticker : str):
     _log.info(f"Getting models info from S3...")
     key_list = []
     for object in objects:
-        key = object["key"]
+        key = object["Key"]
         key_tokens = key.split("_")
         if (ticker == key_tokens[0]):
             key_list.append(key)     

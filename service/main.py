@@ -97,7 +97,7 @@ async def get_model_predict_by_model_ticker(model_name : str, ticker : str, time
 
     #Download model from S3
     model_pkl = get_model(model_name)
-    model = pickle.loads(model)
+    model = pickle.loads(model_pkl)
 
     #Get data for prediction
     data_raw = get_history_by_ticker(ticker, timeframe, num_bars)
