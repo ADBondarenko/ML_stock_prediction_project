@@ -9,7 +9,7 @@ from botocore.exceptions import NoCredentialsError, ClientError
 import pickle 
 
 from .utilities.get_data import (get_keys, get_tickers, get_history_by_ticker)
-from .utilities.get_models import (get_models_by_ticker_timeframe, get_models_by_ticker, get_model)
+from .utilities.get_models import (get_models_by_ticker_timeframe, get_models_by_ticker, get_model, get_all_models)
 from .utilities.generate_features import (gen_re_rsi, gen_re_rsi_mtf, gen_rsi, gen_ema, generate_features, cleanup_and_prepare_data)
 from .utilities.train_model import (train_model)
 from .utilities.predict_validate import (get_error_metrics, predict, validate_model)
@@ -61,7 +61,12 @@ async def get_model_model_by_name(model_name : str):
 
     return {"model" : [model_pkl]}
     
-
+@ml_app.get('/model/get_all_availible_models',
+            operation_id = "get__model__all",
+            summary = "Returns a list of trained models")            
+async def get_model_all(most_recent : bool = True):
+    list_of_models = get_all_models(most_recent)
+    return {"Models" : list of models}
     
 @ml_app.get('/model/get_new_model', 
             operation_id = "get__model__new_model",

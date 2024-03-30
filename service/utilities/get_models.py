@@ -127,3 +127,42 @@ def get_model(model_name : str):
     _log.info(f"Model succesfully pulled!")
 
     return file_
+
+def get_all_models(most_recent : bool = True): 
+    '''
+    By default - pulls the name of most_recent (last page of an S3 trained)
+    models from S3. If most_recent is set to False - pulls 
+    
+    '''
+    _log = logging.getLogger(__name__)
+    #Getting keys
+    keychain = get_keys()
+    API_S3_ID = keychain["API_S3_ID"]
+    API_S3_SECRET = keychain["API_S3_SECRET"]
+
+    #Opening client
+    session = boto3.session.Session()
+    s3 = session.client(
+    service_name='s3',
+    endpoint_url='https://storage.yandexcloud.net',
+    region_name = 'ru-central1',
+    aws_access_key_id = API_S3_ID,
+    aws_secret_access_key = API_S3_SECRET)
+    paginator = s3_client.get_paginator('list_objects_v2')
+    bucket_name = "ml-project"
+    models_list = []
+    if most_recent == True:
+        for page in paginator.paginate(Bucket=bucket_name):
+            for 'Contents' in page:
+                for obj in page['Contents']:
+                    models_list.append(obj['Key'])
+            break
+    else: 
+        for page in paginator.paginate(Bucket=bucket_name):
+            for 'Contents' in page:
+                for obj in page['Contents']:
+                    models_list.append(obj['Key'])
+    
+    _log.info(f"Model succesfully pulled!")
+
+    return models_list
