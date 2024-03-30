@@ -145,7 +145,6 @@ async def get_all_model(message: types.Message,
         if command.args is None:
             await message.answer(
                 "Используем значение по умолчанию - <most_recent> == True")
-                most_recent = True
         else:
             try:
                 args_list = command.args.split(" ", maxsplit=-1)
