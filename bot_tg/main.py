@@ -15,12 +15,12 @@ API_URL = os.getenv('API_URL_SERVICE')
 API_URL = f"http://"+API_URL
 # Диспетчер
 dp = Dispatcher()
-# @ml_app.get('/')
-# @ml_app.get('/model/get_model_by_name')
-# @ml_app.get('/model/get_new_model')
-# @ml_app.get('/model/get_all_availible_models')
-# @ml_app.get('/model/get_models_by_ticker')
-@ml_app.get('/model/predict_by_model_ticker')
+# # @ml_app.get('/')
+# # @ml_app.get('/model/get_model_by_name')
+# # @ml_app.get('/model/get_new_model')
+# # @ml_app.get('/model/get_all_availible_models')
+# # @ml_app.get('/model/get_models_by_ticker')
+# @ml_app.get('/model/predict_by_model_ticker')
 # Запуск процесса поллинга новых апдейтов
 async def main():
     await dp.start_polling(bot)
@@ -140,31 +140,31 @@ async def get_new_model(message: types.Message,
 async def get_all_model(message: types.Message,
                    command : CommandObject):
 
-        #No payload for this request.
-        base_url = API_URL
-        if command.args is None:
+    #No payload for this request.
+    base_url = API_URL
+    if command.args is None:
+        await message.answer(
+            "Используем значение по умолчанию - <most_recent> == True")
+    else:
+        try:
+            args_list = command.args.split(" ", maxsplit=-1)
+            if len(args_list) != 1:
+                raise ValueError
+            most_recent = True 
+        # Если получилось меньше двух частей, вылетит ValueError
+        except ValueError:
             await message.answer(
-                "Используем значение по умолчанию - <most_recent> == True")
-        else:
-            try:
-                args_list = command.args.split(" ", maxsplit=-1)
-                if len(args_list) != 1:
-                    raise ValueError
-                most_recent = True 
-            # Если получилось меньше двух частей, вылетит ValueError
-            except ValueError:
-                await message.answer(
-                    "Ошибка: аргументы не предоставлены. Правильно:\n"
-                    "/get_new_model <most_recent> : True/False \n"
-                )
-                return
-           
-        method_url = f"/model/get_all_model/?most_recent={most_recent}"
-        request_url = base_url+method_url
-        
-        reply = requests.get(request_url+method_url).content
+                "Ошибка: аргументы не предоставлены. Правильно:\n"
+                "/get_new_model <most_recent> : True/False \n"
+            )
+            return
+       
+    method_url = f"/model/get_all_model/?most_recent={most_recent}"
+    request_url = base_url+method_url
     
-        reply_text = f"Ответ сервиса: {json.loads(reply)}"
+    reply = requests.get(request_url+method_url).content
+
+    reply_text = f"Ответ сервиса: {json.loads(reply)}"
 
     await message.reply(reply_text)
     
