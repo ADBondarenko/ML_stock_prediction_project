@@ -66,7 +66,8 @@ async def get_model_model_by_name(model_name : str):
             summary = "Returns a list of trained models")            
 async def get_model_all(most_recent : bool = True):
     list_of_models = get_all_models(most_recent)
-    return {"Models" : list of models}
+    
+    return {"models" : list_of_models}
     
 @ml_app.get('/model/get_new_model', 
             operation_id = "get__model__new_model",
