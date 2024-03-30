@@ -3,7 +3,7 @@ FROM python:3.9.18-slim
 # Установка зависимостей
 WORKDIR /app
 COPY ./pyproject.toml ./poetry.lock* ./bot_tg /app
-RUN pip install --use-pep517 --editable poetry && poetry config virtualenvs.create false && poetry install --no-dev
+RUN pip install --use-pep517 poetry && poetry config virtualenvs.create false && poetry install --no-dev
 
 # Копирование остального кода приложения
 COPY ./bot_tg /app
