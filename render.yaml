@@ -10,7 +10,7 @@ services:
     maxShutdownDelaySeconds: 120 # Increase graceful shutdown period. Default: 30, Max: 300
     envVars: # Environment variables
       - fromGroup: ml-project-api-bot # Add all variables from an environment group
-  - type: web
+  - type: worker
     name: ml-project-bot-app
     repo: https://github.com/ADBondarenko/ML_stock_prediction_project #render.yaml
     numInstances: 1   # Manual scaling configuration. Default: 1
