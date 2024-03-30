@@ -1,0 +1,12 @@
+FROM python:3.9.18-slim
+
+# Установка зависимостей
+WORKDIR /app
+COPY ./service/pyproject.toml ./service/poetry.lock* /app/
+RUN pip install poetry && poetry config virtualenvs.create false && poetry install --no-dev
+
+# Копирование остального кода приложения
+COPY ./service /app
+
+# Запуск приложения
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
