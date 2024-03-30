@@ -40,7 +40,7 @@ async def start(message: types.Message):
                         "/get_all_model -- go a little window-shopping for availible models\n"
                         "remember to set <most_recent> parameter to False for a full-list"
                         "/predict_by_model_ticker -- get a prediction for given <model_name>, <ticker>,"
-                         "<timeframe> and <num_bars_back> \n""
+                         "<timeframe> and <num_bars_back> \n"
                         "\n"
                         "Please remember to provide params in a whitespace-separated 'param_1 param_2' fashion")
     
