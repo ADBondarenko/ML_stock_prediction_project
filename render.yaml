@@ -6,7 +6,7 @@ services:
     region: frankfurt # Default: oregon
     plan: starter    # Default: starter
     env: docker
-    dockerCommand: ./service/DockerfileAPI
+    dockerCommand: tree/main/service/DockerfileAPI
     maxShutdownDelaySeconds: 120 # Increase graceful shutdown period. Default: 30, Max: 300
     envVars: # Environment variables
       - fromGroup: ml-project-api-bot # Add all variables from an environment group
@@ -17,7 +17,7 @@ services:
     region: frankfurt # Default: oregon
     plan: starter    # Default: starter
     env: docker
-    dockerCommand: ./bot_tg/DockerfileBOT
+    dockerCommand: tree/main/bot_tg/DockerfileBOT
     maxShutdownDelaySeconds: 120 # Increase graceful shutdown period. Default: 30, Max: 300
     envVars: # Environment variables
       - fromGroup: ml-project-api-bot # Add all variables from an environment group
