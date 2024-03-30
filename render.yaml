@@ -1,5 +1,4 @@
 services:
-  # A web service on the Ruby native runtime
   - type: web
     name: ml-project-fast-api-app
     repo: https://github.com/ADBondarenko/ML_stock_prediction_project
