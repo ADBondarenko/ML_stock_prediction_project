@@ -66,27 +66,27 @@ async def get_model_by_name(message: types.Message):
                     "Актуальный список моделей можно получить по команде /get_all_model"
                 )
                 return      
-        else:
-            try:
-                args_list = command.args.split(" ", maxsplit=-1)
-                if len(args_list) != 1:
-                    raise ValueError
-            # Если получилось меньше двух частей, вылетит ValueError
-            except ValueError:
-                await message.answer(
-                    "Ошибка: аргументы не предоставлены. Правильно:\n"
-                    "/get_new_model <name>\n"
-                    "Актуальный список моделей можно получить по команде /get_all_model"
-                )
-                return
-            name = args_list[0]
-            base_url = API_URL
-            method_url = f"/model/get_new_model/{name}"
-            request_url = base_url+method_url
-            
-            reply = requests.get(request_url+method_url).content
+    else:
+        try:
+            args_list = command.args.split(" ", maxsplit=-1)
+            if len(args_list) != 1:
+                raise ValueError
+        # Если получилось меньше двух частей, вылетит ValueError
+        except ValueError:
+            await message.answer(
+                "Ошибка: аргументы не предоставлены. Правильно:\n"
+                "/get_new_model <name>\n"
+                "Актуальный список моделей можно получить по команде /get_all_model"
+            )
+            return
+        name = args_list[0]
+        base_url = API_URL
+        method_url = f"/model/get_new_model/{name}"
+        request_url = base_url+method_url
         
-            reply_text = f"Ответ сервиса: {json.loads(reply)}"
+        reply = requests.get(request_url+method_url).content
+    
+        reply_text = f"Ответ сервиса: {json.loads(reply)}"
 
     await message.reply(reply_text)
 
