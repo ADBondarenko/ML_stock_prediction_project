@@ -10,4 +10,4 @@ RUN poetry install
 COPY ./bot_tg /app
 EXPOSE 9997
 # Запуск приложения
-CMD ["python", "main"]
+CMD ["python", "main.py"]
