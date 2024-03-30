@@ -17,7 +17,7 @@ services:
     region: frankfurt # Default: oregon
     plan: starter    # Default: starter
     env: docker
-    dockerfilePath: ./bot_tg/DockerfileBOT
+    dockerfilePath: ./bot_tg/DockerfileBot
     maxShutdownDelaySeconds: 120 # Increase graceful shutdown period. Default: 30, Max: 300
     envVars: # Environment variables
       - fromGroup: ml-project-api-bot # Add all variables from an environment group
