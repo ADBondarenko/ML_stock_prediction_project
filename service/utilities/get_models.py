@@ -148,18 +148,18 @@ def get_all_models(most_recent : bool = True):
     region_name = 'ru-central1',
     aws_access_key_id = API_S3_ID,
     aws_secret_access_key = API_S3_SECRET)
-    paginator = s3_client.get_paginator('list_objects_v2')
+    paginator = s3.get_paginator('list_objects_v2')
     bucket_name = "ml-project"
     models_list = []
-    if most_recent == True:
+    if most_recent:
         for page in paginator.paginate(Bucket=bucket_name):
-            for 'Contents' in page:
+            if 'Contents' in page:
                 for obj in page['Contents']:
                     models_list.append(obj['Key'])
             break
     else: 
         for page in paginator.paginate(Bucket=bucket_name):
-            for 'Contents' in page:
+            if 'Contents' in page:
                 for obj in page['Contents']:
                     models_list.append(obj['Key'])
     
