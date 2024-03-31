@@ -59,7 +59,8 @@ async def get_service(message: types.Message):
     await message.reply(reply_text)
 
 @dp.message(Command("get_model_by_name"))
-async def get_model_by_name(message: types.Message):
+async def get_model_by_name(message: types.Message,
+                           command : CommandObject):
     if command.args is None:
                 await message.answer(
                     "Ошибка: аргументы не предоставлены. Правильно:\n"
@@ -144,6 +145,7 @@ async def get_all_model(message: types.Message,
     #No payload for this request.
     base_url = API_URL
     if command.args is None:
+        most_recet = True
         await message.answer(
             "Используем значение по умолчанию - <most_recent> == True")
     else:
