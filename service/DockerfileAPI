@@ -7,7 +7,7 @@ RUN pip install poetry
 RUN poetry config virtualenvs.create false 
 RUN poetry install 
 # Копирование остального кода приложения
-COPY ./service /app
+COPY ./ /app
 EXPOSE 9997
 # Запуск приложения
-CMD ["uvicorn", ".main:ml_app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["uvicorn", "service.main:ml_app", "--host", "0.0.0.0", "--port", "8000"]
