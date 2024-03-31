@@ -145,7 +145,7 @@ async def get_all_model(message: types.Message,
     #No payload for this request.
     base_url = API_URL
     if command.args is None:
-        most_recet = True
+        most_recent = True
         await message.answer(
             "Используем значение по умолчанию - <most_recent> == True")
     else:
