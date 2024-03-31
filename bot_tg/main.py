@@ -151,6 +151,7 @@ async def get_all_model(message: types.Message,
             args_list = command.args.split(" ", maxsplit=-1)
             if len(args_list) != 1:
                 raise ValueError
+            most_recent = args_list[0]
 
         # Если получилось меньше двух частей, вылетит ValueError
         except ValueError:
@@ -159,7 +160,7 @@ async def get_all_model(message: types.Message,
                 "/get_new_model <most_recent> : True/False \n"
             )
             return
-    most_recent = args_list[0]
+    
     method_url = f"/model/get_all_model/?most_recent={most_recent}"
     request_url = base_url+method_url
     
