@@ -37,6 +37,7 @@ async def start(message: types.Message):
                          "binary_rsi : bool = True, rsi_period : int =14, \n"
                          "rsi_levels : list = [20,40,60,80], binary_ema : bool = True\n"
                          "ema_periods : list = [8,24], nth_diff : int = 1 \n"
+                        "/get_models_by_ticker <ticker> \n"
                         "/get_all_model -- go a little window-shopping for availible models\n"
                         "remember to set <most_recent> parameter to False for a full-list"
                         "/predict_by_model_ticker -- get a prediction for given <model_name>, <ticker>,"
@@ -150,7 +151,7 @@ async def get_all_model(message: types.Message,
             args_list = command.args.split(" ", maxsplit=-1)
             if len(args_list) != 1:
                 raise ValueError
-            most_recent = True 
+
         # Если получилось меньше двух частей, вылетит ValueError
         except ValueError:
             await message.answer(
@@ -158,7 +159,7 @@ async def get_all_model(message: types.Message,
                 "/get_new_model <most_recent> : True/False \n"
             )
             return
-       
+    most_recent = args_list[0]
     method_url = f"/model/get_all_model/?most_recent={most_recent}"
     request_url = base_url+method_url
     
