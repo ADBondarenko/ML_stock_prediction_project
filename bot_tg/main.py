@@ -210,37 +210,6 @@ async def get_models_by_ticker(message: types.Message,
     await message.reply(reply_text)
 #requests.patch(url, params={key: value}, args)
 
-@dp.message(Command("get_dog_by_pk"))
-async def get_dog_by_pk(message: types.Message,
-                   command : CommandObject):
-    
-    base_url = API_URL
-
-    if command.args is None:
-        await message.answer(
-            "Ошибка: не переданы аргументы:\n"
-            "/get_dog_by_pk <pk>"
-        )
-        return
-    try:
-        pk = command.args.split(" ", maxsplit = -1)
-        if len(pk) != 1:
-            raise ValueError
-    
-    except ValueError:
-        await message.answer(
-            "Ошибка: неправильный формат команды. Правильно:\n"
-            "/get_dog_by_pk <pk>"
-        )
-        return
-        
-    pk = pk[0]
-    method_url = f"/dog/{pk}"
-    request_url = base_url+method_url
-    reply = requests.get(request_url).content
-
-    reply_text = f"Ответ сервиса: {json.loads(reply)}"
-
     await message.reply(reply_text)
 
 

@@ -22,6 +22,8 @@ class ModelType(str, Enum):
     random_forest = "rf"
     linear_regression = "lr"
     hist_gradient_boosting = "hgb"
+    mlp = "mlp"
+    lstm = "lstm"
    
 class Timeframe(str, Enum):
     m1 = "1m"
