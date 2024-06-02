@@ -1,5 +1,8 @@
 from sklearn.linear_model import LinearRegression
 from sklearn.ensemble import (RandomForestRegressor, HistGradientBoostingRegressor)
+from .dl_models import LSTMModel, MLPModel
+import torch.optim as optim
+from torch.utils.data import DataLoader, TensorDataset
 import pickle
 import logging
 from datetime import datetime
@@ -15,26 +18,95 @@ def train_model(X_train, y_train, ticker : str, timeframe : str, model : str = "
     
     implemented_models_dict = {"lr" : LinearRegression, 
                                "rf" : RandomForestRegressor,
-                               "hgb" : HistGradientBoostingRegressor}
+                               "hgb" : HistGradientBoostingRegressor,
+                              "lstm" : LSTM,
+                              "mlp" : MLP}
 
     if model not in implemented_models_dict.keys():
         raise ValueError("Model not implemented yet")
+        
+    if model == "lstm":
+        #Архитектура выбрана на базе DOI: 10.1142/S0129065721300011
+        cur_model = LSTMModel(input_size = X.shape[0], hidden_size = X.shape[0]*3, output_size = 1, num_layers=1
+                        )
+        #Гиперпараметры прибиты гвоздями для быстродействия
+        batch_size = 32   
+        time_steps = 10    # Размер скользящего окна
+        learning_rate = 0.001
+        num_epochs = 50
 
-    cur_model = implemented_models_dict[model]()
-    now = datetime.now()
-    _log.info(f"Started training model at {now} timestamp")
-    cur_model.fit(X_train, y_train)
-    then = datetime.now()
-    
-    time_diff_seconds = (then - now).total_seconds()
-    then = then.strftime("%Y-%m-%d-%H-%M-%S")
-    
-    _log.info(f"Model succesfully trained in {time_diff_seconds} s.")
-    model_name = f"{ticker}_{model}_{timeframe}_{then}_train"
-    
-    
-    now = datetime.now()
-    _log.info(f"Started saving model at timestamp {now}...")
+        criterion = nn.MSELoss()
+        optimizer = optim.Adam(model.parameters(), lr=learning_rate)
+
+
+        train_dataset = TensorDataset(X_train, y_train)
+        train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=False) #можно и так, и так, но классика для TS - не перемешивать
+        now = datetime.now()
+        _log.info(f"Started training model at {now} timestamp")
+        for epoch in range(num_epochs):
+            cur_model.train()
+            for i, (inputs, labels) in enumerate(train_loader):
+                outputs = model(inputs)
+                loss = criterion(outputs, labels)
+                optimizer.zero_grad()
+                loss.backward()
+                optimizer.step()
+            now = datetime.now()
+        
+        then = datetime.now()
+            
+        time_diff_seconds = (then - now).total_seconds()
+        then = then.strftime("%Y-%m-%d-%H-%M-%S")
+            
+        _log.info(f"Model succesfully trained in {time_diff_seconds} s.")
+        model_name = f"{ticker}_{model}_{timeframe}_{then}_train"
+
+
+    elif model == "mlp":
+        cur_model = MLPModel(input_size = X.shape[0], hidden_size = X.shape[0]*3, output_size = 1)
+        batch_size = 32   
+        learning_rate = 0.001
+        num_epochs = 50
+        
+        criterion = nn.MSELoss()
+        optimizer = optim.Adam(model.parameters(), lr=learning_rate)
+        train_dataset = TensorDataset(X_train, y_train)
+        train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=False)
+        
+        now = datetime.now()
+        _log.info(f"Started training model at {now} timestamp")
+        for epoch in range(num_epochs):
+            cur_model.train()
+            for i, (inputs, labels) in enumerate(train_loader):
+                outputs = model(inputs)
+                loss = criterion(outputs, labels)
+                optimizer.zero_grad()
+                loss.backward()
+                optimizer.step()
+
+        
+        then = datetime.now()
+            
+        time_diff_seconds = (then - now).total_seconds()
+        then = then.strftime("%Y-%m-%d-%H-%M-%S")
+            
+        _log.info(f"Model succesfully trained in {time_diff_seconds} s.")
+        model_name = f"{ticker}_{model}_{timeframe}_{then}_train"
+    else:
+        cur_model = implemented_models_dict[model]()
+        now = datetime.now()
+        _log.info(f"Started training model at {now} timestamp")
+        cur_model.fit(X_train, y_train)
+        then = datetime.now()
+        
+        time_diff_seconds = (then - now).total_seconds()
+        then = then.strftime("%Y-%m-%d-%H-%M-%S")
+        
+        _log.info(f"Model succesfully trained in {time_diff_seconds} s.")
+        model_name = f"{ticker}_{model}_{timeframe}_{then}_train"
+        
+        
+        
     
 
     #Getting keys
@@ -52,7 +124,9 @@ def train_model(X_train, y_train, ticker : str, timeframe : str, model : str = "
     aws_secret_access_key = API_S3_SECRET)
     
     #Pickled model
-    model_pickled = pickle.dumps(cur_model)
+    now = datetime.now()
+    _log.info(f"Started saving model at timestamp {now}...")
+    model_pickled = pickle.dumps(cur_model, f)
 
     #Upload to S3
     bucket_name = "ml-project"

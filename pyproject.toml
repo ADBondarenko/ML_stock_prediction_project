@@ -6,6 +6,16 @@ authors = ["Artem Bondarenko <Regall.B@yandex.ru>"]
 license = "MIT"
 readme = "README.md"
 
+[[tool.poetry.source]]
+name = 'pypi_'  # needed until python-poetry/poetry#3456 is resolved.
+url = 'https://pypi.org/simple'
+secondary = false
+
+[[tool.poetry.source]]
+name = 'packagecloud'
+url = 'https://tolkeintokentokerton:@packagecloud.io/slug/General/pypi/simple'
+secondary = true
+
 [tool.poetry.dependencies]
 python = "3.9.18"
 pandas = "^2.1.4"
@@ -20,6 +30,7 @@ pylint = "^3.0.3"
 python-multipart = "^0.0.6"
 psycopg2-binary = "^2.9.9"
 aiogram = "^3.4.1"
+torch ="2.3.0"
 
 
 [build-system]
