@@ -19,8 +19,8 @@ def train_model(X_train, y_train, ticker : str, timeframe : str, model : str = "
     implemented_models_dict = {"lr" : LinearRegression, 
                                "rf" : RandomForestRegressor,
                                "hgb" : HistGradientBoostingRegressor,
-                              "lstm" : LSTM,
-                              "mlp" : MLP}
+                              "lstm" : LSTMModel,
+                              "mlp" : MLPModel}
 
     if model not in implemented_models_dict.keys():
         raise ValueError("Model not implemented yet")

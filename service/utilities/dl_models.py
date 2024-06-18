@@ -20,6 +20,7 @@ class LSTMModel(nn.Module):
         Метод для консистентности работы бека
         '''
         self.eval()
+        x = torch.Tensor(x)
         with torch.no_grad():
             y_hat = self.forward(x)
         return y_hat
@@ -41,6 +42,7 @@ class MLPModel(nn.Module):
         Метод для консистентности работы бека
         '''
         self.eval()
+        x = torch.Tensor(x)
         with torch.no_grad():
             y_hat = self.forward(x)
         return y_hat
