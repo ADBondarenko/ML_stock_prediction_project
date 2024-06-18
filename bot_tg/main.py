@@ -7,6 +7,7 @@ import os
 import requests
 import json
 import logging
+
 # Включаем логирование, чтобы не пропустить важные сообщения
 logging.basicConfig(level=logging.INFO)
 # Объект бота

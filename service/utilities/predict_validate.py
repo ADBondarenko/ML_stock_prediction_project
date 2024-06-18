@@ -2,6 +2,7 @@ from sklearn.linear_model import LinearRegression
 from sklearn.metrics import (r2_score, mean_squared_error)
 import pickle
 import logging
+import torch
 from datetime import datetime
 from .get_data import (get_keys)
 
@@ -18,11 +19,15 @@ def get_error_metrics(y_val, y_hat) -> dict:
 
     returns: metrics_dict -> dict
     '''
+    y_val = torch.Tensor(y_val.to_numpy()).to('cpu')
+    y_hat = torch.Tensor(y_hat).to('cpu')
+    y_val = y_val.cpu().numpy()
+    y_hat = y_hat.cpu().numpy()
     _log = logging.getLogger(__name__)
     _log.info(f"Validating prediction quality...")
 
-    metrics_dict = {"R2_score" : r2_score(y_true = y_val, y_pred = y_hat),
-                    "RMSE" : mean_squared_error(y_true = y_val, y_pred = y_hat, squared = False)}
+    metrics_dict = {"R2_score" : float(r2_score(y_true = y_val, y_pred = y_hat)),
+                    "RMSE" : float(mean_squared_error(y_true = y_val, y_pred = y_hat, squared = False))}
     _log.info(f"Got offline metrics.")
     return metrics_dict
 
