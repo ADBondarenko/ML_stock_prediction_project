@@ -27,7 +27,7 @@ def train_model(X_train, y_train, ticker : str, timeframe : str, model : str = "
         
     if model == "lstm":
         #Архитектура выбрана на базе DOI: 10.1142/S0129065721300011
-        cur_model = LSTMModel(input_size = X.shape[0], hidden_size = X.shape[0]*3, output_size = 1, num_layers=1
+        cur_model = LSTMModel(input_size = X_train.shape[0], hidden_size = X_train.shape[0]*3, output_size = 1, num_layers=1
                         )
         #Гиперпараметры прибиты гвоздями для быстродействия
         batch_size = 32   
@@ -63,7 +63,7 @@ def train_model(X_train, y_train, ticker : str, timeframe : str, model : str = "
 
 
     elif model == "mlp":
-        cur_model = MLPModel(input_size = X.shape[0], hidden_size = X.shape[0]*3, output_size = 1)
+        cur_model = MLPModel(input_size = X_train.shape[0], hidden_size = X_train.shape[0]*3, output_size = 1)
         batch_size = 32   
         learning_rate = 0.001
         num_epochs = 50
@@ -126,7 +126,7 @@ def train_model(X_train, y_train, ticker : str, timeframe : str, model : str = "
     #Pickled model
     now = datetime.now()
     _log.info(f"Started saving model at timestamp {now}...")
-    model_pickled = pickle.dumps(cur_model, f)
+    model_pickled = pickle.dumps(cur_model)
 
     #Upload to S3
     bucket_name = "ml-project"
