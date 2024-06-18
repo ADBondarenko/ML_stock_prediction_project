@@ -6,7 +6,7 @@ from pydantic import BaseModel
 import os
 import requests
 import json
-
+import logging
 # Включаем логирование, чтобы не пропустить важные сообщения
 logging.basicConfig(level=logging.INFO)
 # Объект бота
@@ -120,6 +120,8 @@ async def get_new_model(message: types.Message,
                 "<model_type> бывает     RandomForest  - 'rf', \n"
                 "LinearRegression = 'lr' \n"
                 "HistGradientBoosting = 'hgb' \n"
+                "MultiLevelPerceptron = 'mlp' \n"
+                "LSTM = 'lstm' \n"
                 "Актуальный список тикеров лежит на сайте OKX/в утилях"
             )
             return
@@ -187,10 +189,6 @@ async def get_models_by_ticker(message: types.Message,
         if len(args_list) != 1:
             raise ValueError
         ticker = args_list[0]
-        if kind not in ["terrier", "bulldog", "dalmatian"]:
-            raise ValueError
-        if type(int(pk)) is not int:
-            raise ValueError
 
     except ValueError:
         await message.answer(
@@ -244,7 +242,7 @@ async def predict_by_model_ticker(message: types.Message,
             await message.answer(
                 "Ошибка: аргументы не предоставлены. Правильно:\n"
                 "/get_new_model <model_name>, <ticker>, <timeframe>  \n"
-                "<num_bars_back> - опциональный аргумент. \n"
+                "<num_bars_back> \n"
             )
             return
 
