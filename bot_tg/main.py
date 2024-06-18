@@ -166,7 +166,7 @@ async def get_all_model(message: types.Message,
             )
             return
     
-    method_url = f"/model/get_all_availible_models/?most_recent={most_recent}"
+    method_url = f"/model/get_all_availible_models?most_recent={most_recent}"
     request_url = base_url+method_url
     
     reply = requests.get(request_url+method_url).content
