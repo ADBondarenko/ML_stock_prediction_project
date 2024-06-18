@@ -1,13 +1,15 @@
 from sklearn.linear_model import LinearRegression
 from sklearn.ensemble import (RandomForestRegressor, HistGradientBoostingRegressor)
-from .dl_models import LSTMModel, MLPModel
+from .dl_models import MLPModel, create_sequences
 import torch.optim as optim
 from torch.utils.data import DataLoader, TensorDataset
+import torch
 import pickle
 import logging
 from datetime import datetime
 from .get_data import (get_keys)
 import boto3 
+import torch.nn as nn
 
 def train_model(X_train, y_train, ticker : str, timeframe : str, model : str = "rf"):
     '''
@@ -19,57 +21,65 @@ def train_model(X_train, y_train, ticker : str, timeframe : str, model : str = "
     implemented_models_dict = {"lr" : LinearRegression, 
                                "rf" : RandomForestRegressor,
                                "hgb" : HistGradientBoostingRegressor,
-                              "lstm" : LSTMModel,
                               "mlp" : MLPModel}
 
     if model not in implemented_models_dict.keys():
         raise ValueError("Model not implemented yet")
         
     if model == "lstm":
-        #Архитектура выбрана на базе DOI: 10.1142/S0129065721300011
-        cur_model = LSTMModel(input_size = X_train.shape[0], hidden_size = X_train.shape[0]*3, output_size = 1, num_layers=1
-                        )
-        #Гиперпараметры прибиты гвоздями для быстродействия
-        batch_size = 32   
-        time_steps = 10    # Размер скользящего окна
-        learning_rate = 0.001
-        num_epochs = 50
-
-        criterion = nn.MSELoss()
-        optimizer = optim.Adam(model.parameters(), lr=learning_rate)
+        pass
+        # #Архитектура выбрана на базе DOI: 10.1142/S0129065721300011
+        # #Гиперпараметры прибиты гвоздями для быстродействия
+        # batch_size = 32   
+        # time_steps = 5    # Размер скользящего окна
+        # learning_rate = 0.001
+        # num_epochs = 50
 
 
-        train_dataset = TensorDataset(X_train, y_train)
-        train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=False) #можно и так, и так, но классика для TS - не перемешивать
-        now = datetime.now()
-        _log.info(f"Started training model at {now} timestamp")
-        for epoch in range(num_epochs):
-            cur_model.train()
-            for i, (inputs, labels) in enumerate(train_loader):
-                outputs = model(inputs)
-                loss = criterion(outputs, labels)
-                optimizer.zero_grad()
-                loss.backward()
-                optimizer.step()
-            now = datetime.now()
         
-        then = datetime.now()
+        # X_train, y_train = X_train.to_numpy(), y_train.to_numpy()
+        # X_train, y_train = create_sequences(X_train, y_train, time_steps)
+        
+        # X_train = torch.tensor(X_train, dtype=torch.float32)
+        # y_train = torch.tensor(y_train, dtype=torch.float32).unsqueeze(1)
+        
+        # cur_model = LSTMModel(input_size = X_train.shape[1], hidden_size = X_train.shape[1]*3, output_size = 1, num_layers=1
+        #                 )
+        
+        # criterion = nn.MSELoss()
+        # optimizer = optim.Adam(cur_model.parameters(), lr=learning_rate)
+        # train_dataset = TensorDataset(X_train, y_train)
+        # train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=False) #можно и так, и так, но классика для TS - не перемешивать
+        # now = datetime.now()
+        # _log.info(f"Started training model at {now} timestamp")
+        # for epoch in range(num_epochs):
+        #     cur_model.train()
+        #     for i, (inputs, labels) in enumerate(train_loader):
+        #         outputs = cur_model(inputs)
+        #         loss = criterion(outputs, labels)
+        #         optimizer.zero_grad()
+        #         loss.backward()
+        #         optimizer.step()
+        #     now = datetime.now()
+        
+        # then = datetime.now()
             
-        time_diff_seconds = (then - now).total_seconds()
-        then = then.strftime("%Y-%m-%d-%H-%M-%S")
+        # time_diff_seconds = (then - now).total_seconds()
+        # then = then.strftime("%Y-%m-%d-%H-%M-%S")
             
-        _log.info(f"Model succesfully trained in {time_diff_seconds} s.")
-        model_name = f"{ticker}_{model}_{timeframe}_{then}_train"
+        # _log.info(f"Model succesfully trained in {time_diff_seconds} s.")
+        # model_name = f"{ticker}_{model}_{timeframe}_{then}_train"
 
 
     elif model == "mlp":
-        cur_model = MLPModel(input_size = X_train.shape[0], hidden_size = X_train.shape[0]*3, output_size = 1)
+        cur_model = MLPModel(input_size = X_train.shape[1], hidden_size = X_train.shape[1]*3, output_size = 1)
         batch_size = 32   
         learning_rate = 0.001
         num_epochs = 50
-        
+        X_train = torch.tensor(X_train.to_numpy(), dtype=torch.float32)
+        y_train = torch.tensor(y_train.to_numpy(), dtype=torch.float32)
         criterion = nn.MSELoss()
-        optimizer = optim.Adam(model.parameters(), lr=learning_rate)
+        optimizer = optim.Adam(cur_model.parameters(), lr=learning_rate)
         train_dataset = TensorDataset(X_train, y_train)
         train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=False)
         
@@ -78,7 +88,7 @@ def train_model(X_train, y_train, ticker : str, timeframe : str, model : str = "
         for epoch in range(num_epochs):
             cur_model.train()
             for i, (inputs, labels) in enumerate(train_loader):
-                outputs = model(inputs)
+                outputs = cur_model(inputs)
                 loss = criterion(outputs, labels)
                 optimizer.zero_grad()
                 loss.backward()

@@ -6,14 +6,14 @@ import os
 import psycopg2
 import boto3
 from botocore.exceptions import NoCredentialsError, ClientError
-import pickle 
-
+import pickle
 from .utilities.get_data import (get_keys, get_tickers, get_history_by_ticker)
 from .utilities.get_models import (get_models_by_ticker_timeframe, get_models_by_ticker, get_model, get_all_models)
 from .utilities.generate_features import (gen_re_rsi, gen_re_rsi_mtf, gen_rsi, gen_ema, generate_features, cleanup_and_prepare_data)
 from .utilities.train_model import (train_model)
 from .utilities.predict_validate import (get_error_metrics, predict, validate_model)
-
+# from dotenv import load_dotenv
+# load_dotenv()
 #Inititalize app
 ml_app = FastAPI()
 
@@ -23,7 +23,7 @@ class ModelType(str, Enum):
     linear_regression = "lr"
     hist_gradient_boosting = "hgb"
     mlp = "mlp"
-    lstm = "lstm"
+    # lstm = "lstm"
    
 class Timeframe(str, Enum):
     m1 = "1m"
