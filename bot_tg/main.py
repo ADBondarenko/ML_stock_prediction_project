@@ -105,6 +105,7 @@ async def get_new_model(message: types.Message,
                 "<model_type> бывает     RandomForest  - 'rf', \n"
                 "LinearRegression = 'lr' \n"
                 "HistGradientBoosting = 'hgb' \n"
+                "MultiLevelPerceptron = 'mlp' \n"
                 "Актуальный список тикеров лежит на сайте OKX/в утилях"
             )
             return      
@@ -220,7 +221,7 @@ async def predict_by_model_ticker(message: types.Message,
     if command.args is None:
             await message.answer(
                 "Ошибка: аргументы не предоставлены. Правильно:\n"
-                "/predict_by_model_ticker <ticker>, <timeframe>, <model_type>, <num_bars_back>  \n"
+                "/predict_by_model_ticker <model_name>, <ticker>, <timeframe>, <num_bars_back>  \n"
                 "<num_bars_back> \n"
             )
             return      
@@ -233,7 +234,6 @@ async def predict_by_model_ticker(message: types.Message,
                 model_name = args_list[0]
                 ticker = args_list[1]
                 timeframe = args_list[2]
-                num_bars_back = args_list[3]
             if len(args_list) == 4:
                 model_name = args_list[0]
                 ticker = args_list[1]
