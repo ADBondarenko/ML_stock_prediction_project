@@ -39,7 +39,7 @@ async def start(message: types.Message):
                          "ema_periods : list = [8,24], nth_diff : int = 1 \n"
                         "/get_models_by_ticker <ticker> \n"
                         "/get_all_model -- go a little window-shopping for availible models\n"
-                        "remember to set <most_recent> parameter to False for a full-list"
+                        "remember to set <most_recent> parameter to False for a full-list \n"
                         "/predict_by_model_ticker -- get a prediction for given <model_name>, <ticker>,"
                          "<timeframe> and <num_bars_back> \n"
                         "\n"
@@ -83,7 +83,7 @@ async def get_model_by_name(message: types.Message,
             return
         name = args_list[0]
         base_url = API_URL
-        method_url = f"/model/get_new_model/{name}"
+        method_url = f"/model/get_model_by_name?name={name}"
         request_url = base_url+method_url
         
         reply = requests.get(request_url+method_url).content
@@ -197,11 +197,11 @@ async def get_models_by_ticker(message: types.Message,
         )
         return
     base_url = API_URL
-    method_url = f"/model/get_all_model/?ticker={ticker}"
+    method_url = f"/model/get_models_by_ticker/?ticker={ticker}"
     #Hardcoded payload
     
     request_url = base_url+method_url
-    reply = requests.post(request_url).content
+    reply = requests.get(request_url).content
 
     reply_text = f"Ответ сервиса: {json.loads(reply)}"
 
@@ -219,7 +219,8 @@ async def predict_by_model_ticker(message: types.Message,
     if command.args is None:
             await message.answer(
                 "Ошибка: аргументы не предоставлены. Правильно:\n"
-                "/get_new_model <model_name>, <ticker>, <timeframe>"
+                "/predict_by_model_ticker <ticker>, <timeframe>, <model_type>, <num_bars_back>  \n"
+                "<num_bars_back> \n"
             )
             return      
     else:
@@ -241,7 +242,7 @@ async def predict_by_model_ticker(message: types.Message,
         except ValueError:
             await message.answer(
                 "Ошибка: аргументы не предоставлены. Правильно:\n"
-                "/get_new_model <model_name>, <ticker>, <timeframe>  \n"
+                "/predict_by_model_ticker <ticker>, <timeframe>, <model_type>, <num_bars_back>  \n"
                 "<num_bars_back> \n"
             )
             return
