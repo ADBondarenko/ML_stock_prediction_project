@@ -55,8 +55,11 @@ class MLPModel(nn.Module):
         '''
         self.eval()
         x = torch.Tensor(x.to_numpy()).to('cpu')
+        # print(f"Input shape: {x.shape}")
         with torch.no_grad():
             y_hat = self.forward(x)
+        # print(f"Output shape: {y_hat.shape}")
+        # print(list(y_hat))
         return y_hat
 
 def create_sequences(X, y, seq_length):
