@@ -1,0 +1,5 @@
+/get_new_model BTC-USDT 5m mlp 300
+/get_models_by_ticker TON-USDT
+/get_all_model
+/predict_by_model_ticker ETH-USDT_rf_15m_2024-06-18-22-26-50_train BTC-USDT 5m
+/predict_by_model_ticker BTC-USDT_mlp_5m_2024-06-18-23-03-15_train BTC-USDT 5m
