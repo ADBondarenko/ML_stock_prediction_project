@@ -12,9 +12,11 @@ from .utilities.get_models import (get_models_by_ticker_timeframe, get_models_by
 from .utilities.generate_features import (gen_re_rsi, gen_re_rsi_mtf, gen_rsi, gen_ema, generate_features, cleanup_and_prepare_data)
 from .utilities.train_model import (train_model)
 from .utilities.predict_validate import (get_error_metrics, predict, validate_model)
-from dotenv import load_dotenv
-load_dotenv()
-#Inititalize app
+
+# from dotenv import load_dotenv
+# load_dotenv()
+# Inititalize app
+
 ml_app = FastAPI()
 
 #Create classes for Requests methods
