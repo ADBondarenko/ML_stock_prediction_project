@@ -234,13 +234,13 @@ async def predict_by_model_ticker(message: types.Message,
                 model_name = args_list[0]
                 ticker = args_list[1]
                 timeframe = args_list[2]
-                method_url = f"/model/predict_by_model_ticker/?ticker={ticker}&timeframe={timeframe}&model_name={model_type}"
+                method_url = f"/model/predict_by_model_ticker/?ticker={ticker}&timeframe={timeframe}&model_name={model_name}"
             if len(args_list) == 4:
                 model_name = args_list[0]
                 ticker = args_list[1]
                 timeframe = args_list[2]
                 num_bars_back = args_list[3]
-                method_url = f"/model/predict_by_model_ticker/?ticker={ticker}&timeframe={timeframe}&model_name={model_type}&num_bars_back={num_bars_back}"
+                method_url = f"/model/predict_by_model_ticker/?ticker={ticker}&timeframe={timeframe}&model_name={model_name}&num_bars_back={num_bars_back}"
         # Если получилось меньше двух частей, вылетит ValueError
         except ValueError:
             await message.answer(
