@@ -216,7 +216,7 @@ async def get_models_by_ticker(message: types.Message,
 @dp.message(Command("predict_by_model_ticker"))
 async def predict_by_model_ticker(message: types.Message,
                    command : CommandObject):
-
+    base_url = API_URL
     #No payload for this request.
     if command.args is None:
             await message.answer(
@@ -234,11 +234,13 @@ async def predict_by_model_ticker(message: types.Message,
                 model_name = args_list[0]
                 ticker = args_list[1]
                 timeframe = args_list[2]
+                method_url = f"/model/predict_by_model_ticker/?ticker={ticker}&timeframe={timeframe}&model_name={model_type}"
             if len(args_list) == 4:
                 model_name = args_list[0]
                 ticker = args_list[1]
                 timeframe = args_list[2]
                 num_bars_back = args_list[3]
+                method_url = f"/model/predict_by_model_ticker/?ticker={ticker}&timeframe={timeframe}&model_name={model_type}&num_bars_back={num_bars_back}"
         # Если получилось меньше двух частей, вылетит ValueError
         except ValueError:
             await message.answer(
@@ -248,11 +250,11 @@ async def predict_by_model_ticker(message: types.Message,
             )
             return
 
-        base_url = API_URL
-        method_url = f"/model/predict_by_model_ticker/?ticker={ticker}&timeframe={timeframe}&model_name={model_type}&num_bars_back={num_bars_back}"
+        
+        
         request_url = base_url+method_url
         
-        reply = requests.get(request_url+method_url).content
+        reply = requests.get(request_url).content
     
         reply_text = f"Ответ сервиса: {json.loads(reply)}"
 
