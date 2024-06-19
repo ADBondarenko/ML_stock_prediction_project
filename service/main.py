@@ -14,7 +14,7 @@ from .utilities.train_model import (train_model)
 from .utilities.predict_validate import (get_error_metrics, predict, validate_model)
 # from dotenv import load_dotenv
 # load_dotenv()
-#Inititalize app
+# Inititalize app
 ml_app = FastAPI()
 
 #Create classes for Requests methods

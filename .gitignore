@@ -1,6 +1,7 @@
 #Individual files
 Untitled.ipynb
 .env
+test_queries_to_bot.txt
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

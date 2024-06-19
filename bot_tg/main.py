@@ -105,6 +105,7 @@ async def get_new_model(message: types.Message,
                 "<model_type> бывает     RandomForest  - 'rf', \n"
                 "LinearRegression = 'lr' \n"
                 "HistGradientBoosting = 'hgb' \n"
+                "MultiLevelPerceptron = 'mlp' \n"
                 "Актуальный список тикеров лежит на сайте OKX/в утилях"
             )
             return      
@@ -169,7 +170,7 @@ async def get_all_model(message: types.Message,
     method_url = f"/model/get_all_availible_models?most_recent={most_recent}"
     request_url = base_url+method_url
     
-    reply = requests.get(request_url+method_url).content
+    reply = requests.get(request_url).content
 
     reply_text = f"Ответ сервиса: {json.loads(reply)}"
 
@@ -220,20 +221,19 @@ async def predict_by_model_ticker(message: types.Message,
     if command.args is None:
             await message.answer(
                 "Ошибка: аргументы не предоставлены. Правильно:\n"
-                "/predict_by_model_ticker <ticker>, <timeframe>, <model_type>, <num_bars_back>  \n"
+                "/predict_by_model_ticker <model_name>, <ticker>, <timeframe>, <num_bars_back>  \n"
                 "<num_bars_back> \n"
             )
             return      
     else:
         try:
             args_list = command.args.split(" ", maxsplit=-1)
-            if (len(args_list) != 3) or (len(args_list) != 4):
+            if (len(args_list) not in [3,4]):
                 raise ValueError
             if len(args_list) == 3:
                 model_name = args_list[0]
                 ticker = args_list[1]
                 timeframe = args_list[2]
-                num_bars_back = args_list[3]
             if len(args_list) == 4:
                 model_name = args_list[0]
                 ticker = args_list[1]
